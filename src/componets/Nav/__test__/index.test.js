@@ -1,38 +1,54 @@
 import React from "react";
-import { render, cleanup } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
-import Nav from '..';
+import { render, cleanup } from "@testing-library/react";
+import "@testing-library/jest-dom/extend-expect";
+import Nav from "..";
 
-afterEach(cleanup)
+const categories = [
+  { name: "Portraits", description: "Portraits of people in my life" },
+];
+const mockCurrentCategory = jest.fn();
+const mockSetCurrentCategory = jest.fn();
 
-describe('Nav componet', () => {
-    // baseline test
-    it('renders', () => {
-        render(<Nav />)
-    });
+afterEach(cleanup);
 
-    //snapshot test
-    it('matches snapshot', () => {
-        const { asFragment } = render(<Nav />);
-        
-        expect(asFragment()).toMatchSnapshot();
-    });
-})
+describe("Nav componet", () => {
+  // baseline test
+  it("renders", () => {
+    render(<Nav />);
+  });
+
+  //snapshot test
+  it("matches snapshot", () => {
+    const { asFragment } = render(<Nav />);
+
+    expect(asFragment()).toMatchSnapshot();
+  });
+});
 
 //describe function is not absolutley necessary for the test to run; it is used to organize tests into sections that are typically labeled with the element being tested
-describe('emoji is visible', () => {
-    it('inserts emoji into the h2', () => {
-        //Arrange
-        const { getByLabelText } = render(<Nav />);
-        //Assert
-        expect(getByLabelText('camera')).toHaveTextContent('📸');
-    })
-})
+describe("emoji is visible", () => {
+  it("inserts emoji into the h2", () => {
+    //Arrange
+    const { getByLabelText } = render(<Nav />);
+    //Assert
+    expect(getByLabelText("camera")).toHaveTextContent("📸");
+  });
+});
 
-describe('links are visible', () => {
-    it('inserts text into the links', () => {
-        const { getByTestId } = render(<Nav />);
-        expect(getByTestId('link')).toHaveTextContent('Oh Snap!');
-        expect(getByTestId('about')).toHaveTextContent('About me');
-    })
-})
+describe("links are visible", () => {
+  it("inserts text into the links", () => {
+    const { getByTestId } = render(<Nav />);
+    expect(getByTestId("link")).toHaveTextContent("Oh Snap!");
+    expect(getByTestId("about")).toHaveTextContent("About me");
+  });
+});
+
+it("renders", () => {
+  render(
+    <Nav
+      categories={categories}
+      setCurrentCategory={mockCurrentCategory}
+      currentCategory={mockCurrentCategory}
+    />
+  );
+});
