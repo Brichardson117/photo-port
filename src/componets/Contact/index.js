@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { validateEmail } from "../../utils/helpers";
 
 function ContactForm() {
   const [formState, setFormState] = useState({
@@ -6,16 +7,39 @@ function ContactForm() {
     email: "",
     message: "",
   });
+
+  const [errorMessage, setErrorMessage] = useState("");
+
   const { name, email, message } = formState;
   function handleChange(e) {
-    setFormState({ ...formState, [e.target.name]: e.target.value });
+    if (e.target.name === "email") {
+      const isValid = validateEmail(e.target.value);
+      console.log(isValid);
+      if (!isValid) {
+        setErrorMessage("Your email is invalid.");
+      } else {
+        setErrorMessage();
+      }
+
+      if (!e.target.value) {
+        setErrorMessage(`${e.target.name} is required. `);
+      } else {
+        setErrorMessage("");
+      }
+    }
+
+    if (!errorMessage) {
+      setFormState({ ...formState, [e.target.name]: e.target.value });
+    }
+
+    console.log("errorMessage", errorMessage);
   }
-  console.log(formState);
-  function handleSubmit(e){
-      e.preventDefault();
-      console.log(formState)
+  
+  function handleSubmit(e) {
+    e.preventDefault();
+    console.log(formState);
   }
-    return (
+  return (
     <section>
       <h1>Contact Me</h1>
       <form id="contact-form" onSubmit={handleSubmit}>
@@ -25,17 +49,33 @@ function ContactForm() {
             type="text"
             name="name"
             defaultValue={name}
-            onChange={handleChange}
+            onBlur={handleChange}
           />
         </div>
         <div>
           <label htmlFor="email">Email:</label>
-          <input type="email" name="email" defaultValue={email} onChange={handleChange} />
+          <input
+            type="email"
+            name="email"
+            defaultValue={email}
+            onBlur={handleChange}
+          />
         </div>
         <div>
           <label htmlFor="messahe">Message:</label>
-          <textarea name="message" rows="5" defaultValue={message} onChange={handleChange} />
+          <textarea
+            name="message"
+            rows="5"
+            defaultValue={message}
+            onBlur={handleChange}
+          />
+          {errorMessage && (
+            <div>
+                <p className="error-text">{errorMessage}</p>
+            </div>
+        )}
         </div>
+        
         <button type="submit">Submit</button>
       </form>
     </section>
